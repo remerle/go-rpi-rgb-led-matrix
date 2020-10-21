@@ -5,7 +5,7 @@ chmod 755 "${DIR}"
 rm -rf "${DIR}/vendor"
 mkdir "${DIR}/vendor"
 cd "${DIR}/vendor" || exit
-git clone git://github.com/hzeller/rpi-rgb-led-matrix.git
+git clone git://github.com/remerle/rpi-rgb-led-matrix.git
 cd "${DIR}/vendor/rpi-rgb-led-matrix" || exit
-git checkout 0a4f8f9a9
+git -c advice.detachedHead=false checkout b8c7cc4
 make
