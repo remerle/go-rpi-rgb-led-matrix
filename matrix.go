@@ -40,6 +40,7 @@ import "C"
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"os"
 	"unsafe"
 
@@ -83,6 +84,8 @@ type HardwareConfig struct {
 	// Brightness is the initial brightness of the panel in percent. Valid range
 	// is 1..100
 	Brightness int
+	// GpioSlowdown is a number from 0-4 inclusive. Slowdown GPIO. Needed for faster Pis and/or slower panels
+	GpioSlowdown int
 	// ScanMode progressive or interlaced
 	ScanMode ScanMode // strip color layout
 	// Disable the PWM hardware subsystem to create pulses. Typically, you don't
@@ -103,7 +106,7 @@ func (c *HardwareConfig) geometry() (width, height int) {
 	return c.Cols * c.ChainLength, c.Rows * c.Parallel
 }
 
-func (c *HardwareConfig) toC() *C.struct_RGBLedMatrixOptions {
+func (c *HardwareConfig) toC() (*C.struct_RGBLedMatrixOptions, *C.struct_RGBLedRuntimeOptions) {
 	o := &C.struct_RGBLedMatrixOptions{}
 	o.rows = C.int(c.Rows)
 	o.cols = C.int(c.Cols)
@@ -132,8 +135,9 @@ func (c *HardwareConfig) toC() *C.struct_RGBLedMatrixOptions {
 	} else {
 		C.set_inverse_colors(o, C.int(0))
 	}
-
-	return o
+	rto := &C.struct_RGBLedRuntimeOptions{}
+	rto.gpio_slowdown = C.int(int(math.Min(4, math.Max(0, float64(c.GpioSlowdown)))))
+	return o, rto
 }
 
 type ScanMode int8
@@ -173,7 +177,8 @@ func NewRGBLedMatrix(config *HardwareConfig) (c Matrix, err error) {
 	}
 
 	w, h := config.geometry()
-	m := C.led_matrix_create_from_options(config.toC(), nil, nil)
+	matrixOptions, runtimeOptions := config.toC()
+	m := C.led_matrix_create_from_options_and_rt_options(matrixOptions, runtimeOptions)
 	b := C.led_matrix_create_offscreen_canvas(m)
 	c = &RGBLedMatrix{
 		Config: config,
