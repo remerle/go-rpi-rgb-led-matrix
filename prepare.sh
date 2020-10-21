@@ -1,5 +1,6 @@
 #!/bin/bash
 
+chmod 755 .
 rm -rf ./vendor
 mkdir ./vendor
 cd vendor
