@@ -6,6 +6,6 @@ rm -rf "${DIR}/vendor"
 mkdir "${DIR}/vendor"
 cd "${DIR}/vendor" || exit
 git clone git://github.com/hzeller/rpi-rgb-led-matrix.git
-git checkout 0a4f8f9a9
 cd "${DIR}/vendor/rpi-rgb-led-matrix" || exit
+git checkout 0a4f8f9a9
 make
