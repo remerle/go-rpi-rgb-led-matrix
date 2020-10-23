@@ -245,6 +245,7 @@ func (c *RGBLedMatrix) Render() error {
 // At return an Color which allows access to the LED display data as
 // if it were a sequence of 24-bit RGB values.
 func (c *RGBLedMatrix) At(position int) color.Color {
+	fmt.Printf("%v", c.leds[position])
 	return uint32ToColor(c.leds[position])
 }
 
@@ -274,6 +275,6 @@ func uint32ToColor(u C.uint32_t) color.Color {
 		uint8(u>>16) & 255,
 		uint8(u>>8) & 255,
 		uint8(u>>0) & 255,
-		255,
+		0,
 	}
 }
