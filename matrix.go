@@ -274,6 +274,6 @@ func uint32ToColor(u C.uint32_t) color.Color {
 		uint8(u>>16) & 255,
 		uint8(u>>8) & 255,
 		uint8(u>>0) & 255,
-		0,
+		255,
 	}
 }
