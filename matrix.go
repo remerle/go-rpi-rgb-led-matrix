@@ -238,14 +238,13 @@ func (c *RGBLedMatrix) Render() error {
 		(*C.uint32_t)(unsafe.Pointer(&c.leds[0])),
 	)
 
-	c.leds = make([]C.uint32_t, w*h)
+	//c.leds = make([]C.uint32_t, w*h)
 	return nil
 }
 
 // At return an Color which allows access to the LED display data as
 // if it were a sequence of 24-bit RGB values.
 func (c *RGBLedMatrix) At(position int) color.Color {
-	fmt.Printf("%v", c.leds[position])
 	return uint32ToColor(c.leds[position])
 }
 
