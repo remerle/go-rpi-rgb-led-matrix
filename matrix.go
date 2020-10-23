@@ -270,10 +270,14 @@ func colorToUint32(c color.Color) uint32 {
 }
 
 func uint32ToColor(u C.uint32_t) color.Color {
+	alpha := uint8(0)
+	if u > 0 {
+		alpha = 255
+	}
 	return color.RGBA{
-		uint8(u>>16) & 255,
-		uint8(u>>8) & 255,
-		uint8(u>>0) & 255,
-		0,
+		R: uint8(u>>16) & 255,
+		G: uint8(u>>8) & 255,
+		B: uint8(u>>0) & 255,
+		A: alpha,
 	}
 }
